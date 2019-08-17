@@ -1,24 +1,29 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 概要
+Sidekiq動作確認用のサンプル
 
-Things you may want to cover:
+## 確認方法
+コンテナ立ち上げ
+```
+$ docker-compose build
+$ docker-compose up
+```
 
-* Ruby version
+Railsコンテナに入る
+```
+$ docker container exec -it rails /bin/bash
+```
 
-* System dependencies
+ジョブの登録と実行
+```
+# rails c
+> HelloWorker.perform_async
+```
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+コンテナのログに下記のように出力されれば成功です
+```
+worker    | xxxxx INFO: start
+worker    | Hello World!
+worker    | xxxxx INFO: done: 0.34 sec
+```
