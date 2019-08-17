@@ -32,5 +32,8 @@
 # DB data
 docker/db/data/*
 
+# Redis data
+docker/redis/data/*
+
 !.gitkeep
 

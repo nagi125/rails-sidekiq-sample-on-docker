@@ -4,15 +4,16 @@ services:
     container_name: nginx
     build: ./docker/nginx
     ports:
-      - "80:80"
+      - 80:80
     depends_on:
       - rails
 
   rails:
     container_name: rails
-    build: ./
+    build: .
     environment:
       RAILS_ENV: development
+      REDIS_URL: redis://redis:6379/0
       DATABASE_HOST: db
       DATABASE_NAME: rails_development
       DATABASE_USER: docker
@@ -20,9 +21,32 @@ services:
     volumes:
       - .:/app
     expose:
-      - "3000"
+      - 3000
     depends_on:
       - db
+      - redis
+    command: /bin/bash /app/docker-entrypoint.sh
+
+  worker:
+    container_name: worker
+    build: .
+    environment:
+      RAILS_ENV: development
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    command: /bin/bash /app/docker-entrypoint-worker.sh
+
+  redis:
+    image: redis:5.0
+    container_name: redis
+    volumes:
+      - ./docker/redis/data:/data
+      - ./docker/redis/conf/redis.conf:/user/local/etc/redis/redis.conf
+    expose:
+      - 6379
 
   db:
     image: mysql:5.7
@@ -40,4 +64,3 @@ services:
       - ./docker/db/sql:/docker-entrypoint-initdb.d
     ports:
       - 3306:3306
-

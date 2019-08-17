@@ -16,5 +16,5 @@ RUN bundle install
 
 COPY . /app
 
-ENTRYPOINT ["/bin/bash", "/app/docker-entrypoint.sh"]
+#ENTRYPOINT ["/bin/bash", "/app/docker-entrypoint.sh"]
 
